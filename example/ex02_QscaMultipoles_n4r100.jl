@@ -4,36 +4,37 @@ using Plots
 # settings
 # structure
 nmat = 4  # refractive index of a sphere
-radius = 100*1e-9
+radius = 100 * 1e-9
 
 # environment
 nenv = 1.00
 
-# wavelenth 
-lbd0 = (400:1000)*1e-9; lbdp = lbd0.*1e9;
+# wavelenth
+lbd0 = (400:1000) * 1e-9
+lbdp = lbd0 .* 1e9
 
 # other settings
 nmax = -1  # -1: namx large enough (determined from x)
 
 # main
-m,x = jlmie_mx(nmat,radius,lbd0,nenv)
-Qsca = jlmie_Qsca(m,x,nmax)
-Qsca_ED = jlmie_Qsca_a_n(m,x,1)
-Qsca_MD = jlmie_Qsca_b_n(m,x,1)
-Qsca_EQ = jlmie_Qsca_a_n(m,x,2)
-Qsca_MQ = jlmie_Qsca_b_n(m,x,2)
-Qsca_EH = jlmie_Qsca_a_n(m,x,3)
-Qsca_MH = jlmie_Qsca_b_n(m,x,3)
+m, x = jlmie_mx(nmat, radius, lbd0, nenv)
+Qsca = jlmie_Qsca(m, x, nmax)
+Qsca_ED = jlmie_Qsca_a_n(m, x, 1)
+Qsca_MD = jlmie_Qsca_b_n(m, x, 1)
+Qsca_EQ = jlmie_Qsca_a_n(m, x, 2)
+Qsca_MQ = jlmie_Qsca_b_n(m, x, 2)
+Qsca_EH = jlmie_Qsca_a_n(m, x, 3)
+Qsca_MH = jlmie_Qsca_b_n(m, x, 3)
 println("calculation completed")
 
 # show results
 # validation can be done by comparing to ITMO Mie Calculator
 # https://physics.itmo.ru/en/mie
 plt = plot(lbdp,Qsca,
-    xlabel       = "Wavelength (nm)",
-    ylabel       = "Scattering efficiency",
+    xlabel="Wavelength (nm)",
+    ylabel="Scattering efficiency",
     # legend       = false,
-    label        = "Total",
+    label="Total",
     # xlims        =(-3,3),
     # ylims        =(-3,3),
     # aspect_ratio =0.5,
@@ -43,37 +44,19 @@ plt = plot(lbdp,Qsca,
     # linestyle    =:dot,
     # size         =(400,300),
 ) # https://qiita.com/I_ppp/items/dca3552affa6a672e4bd
-plot!(lbdp,Qsca_ED,
-    label = "ED",
-    linestyle = :dash,
-)
-plot!(lbdp,Qsca_MD,
-    label = "MD",
-    linestyle = :dash,
-)
-plot!(lbdp,Qsca_EQ,
-    label = "EQ",
-    linestyle = :dash,
-)
-plot!(lbdp,Qsca_MQ,
-    label = "MQ",
-    linestyle = :dash,
-)
-plot!(lbdp,Qsca_EH,
-    label = "EH",
-    linestyle = :dash,
-)
-plot!(lbdp,Qsca_MH,
-    label = "MH",
-    linestyle = :dash,
-)
+plot!(lbdp, Qsca_ED, label="ED", linestyle=:dash)
+plot!(lbdp, Qsca_MD, label="MD", linestyle=:dash)
+plot!(lbdp, Qsca_EQ, label="EQ", linestyle=:dash)
+plot!(lbdp, Qsca_MQ, label="MQ", linestyle=:dash)
+plot!(lbdp, Qsca_EH, label="EH", linestyle=:dash)
+plot!(lbdp, Qsca_MH, label="MH", linestyle=:dash)
 display(plt)
 
 # save
 if true
     runningfilename = splitext(splitpath(@__FILE__)[end])[1]
     outfilename = ".\\result\\" * runningfilename
-    savefig(plt,outfilename)
+    savefig(plt, outfilename)
     println("Graph has been saved in result directory")
 end
 

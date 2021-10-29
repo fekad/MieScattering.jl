@@ -4,29 +4,30 @@ using Plots
 # settings
 # structure
 nmat = 4  # refractive index of a sphere
-radius = 100*1e-9
+radius = 100 * 1e-9
 
 # environment
 nenv = 1.00
 
-# wavelenth 
-lbd0 = (400:1000)*1e-9; lbdp = lbd0.*1e9;
+# wavelenth
+lbd0 = (400:1000) * 1e-9
+lbdp = lbd0 .* 1e9
 
 # other settings
 nmax = -1  # -1: namx large enough (determined from x)
 
 # main
-m,x = jlmie_mx(nmat,radius,lbd0,nenv)
-Qsca = jlmie_Qsca(m,x,nmax)
+m, x = jlmie_mx(nmat, radius, lbd0, nenv)
+Qsca = jlmie_Qsca(m, x, nmax)
 println("calculation completed")
 
 # show results
 # validation can be done by comparing to ITMO Mie Calculator
 # https://physics.itmo.ru/en/mie
 plt = plot(lbdp,Qsca,
-    xlabel       = "Wavelength (nm)",
-    ylabel       = "Scattering efficiency",
-    legend       = false,
+    xlabel="Wavelength (nm)",
+    ylabel="Scattering efficiency",
+    legend=false,
     # label        ="LABEL",
     # xlims        =(-3,3),
     # ylims        =(-3,3),
@@ -43,6 +44,6 @@ display(plt)
 if true
     runningfilename = splitext(splitpath(@__FILE__)[end])[1]
     outfilename = ".\\result\\" * runningfilename
-    savefig(plt,outfilename)
+    savefig(plt, outfilename)
     println("Graph has been saved in result directory")
 end

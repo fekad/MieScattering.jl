@@ -46,14 +46,14 @@ function jlmie_pt(mu, n::Int)
     end
 
     if n == 0
-        pin = 0 * mu  # pi(0,mu) = 0
-        taun = []  # not used but tau(0,mu) = 0
+        pin = 0 * mu  # pi(0, mu) = 0
+        taun = []  # not used but tau(0, mu) = 0
     elseif n == 1
-        pin = 0 * mu .+ 1  # pi(1,mu) = 1
-        taun = n .* mu .* pin  # note that pi(0,mu) = 0
+        pin = 0 * mu .+ 1  # pi(1, mu) = 1
+        taun = n .* mu .* pin  # note that pi(0, mu) = 0
     elseif n > 1
         # recurrence, eq.(4.47) of B&H
-        pin = (2 * n - 1) / (n - 1) .* mu .* jlmie_pt(mu, n - 1)[1] .-
+        pin = (2n - 1) / (n - 1) .* mu .* jlmie_pt(mu, n - 1)[1] .-
                 (n) / (n - 1) .* jlmie_pt(mu, n - 2)[1]
         taun = n .* mu .* pin .- (n + 1) .* jlmie_pt(mu, n - 1)[1]
     else
@@ -71,8 +71,8 @@ function jlmie_S12(m, x, mu, n::Int)
     an, bn, _, _ = jlmie_abcd(m, x, n)
     pin, taun = jlmie_pt(mu, n)
 
-    S1n = (2 * n + 1) / (n * (n + 1)) .* (an .* pin .+ bn .* taun)
-    S2n = (2 * n + 1) / (n * (n + 1)) .* (an .* taun .+ bn .* pin)
+    S1n = (2n + 1) / (n * (n + 1)) .* (an .* pin .+ bn .* taun)
+    S2n = (2n + 1) / (n * (n + 1)) .* (an .* taun .+ bn .* pin)
     return S1n, S2n
 end
 
@@ -95,7 +95,7 @@ end
 function jlmie_mx(nmat, radius, lbd0, nenv=1.00)
     m = nmat ./ nenv
     lbd = lbd0 ./ nenv  # effective wavelength in the environment
-    k = 2 * pi ./ lbd  # free space wavenumber in the environment
+    k = 2π ./ lbd  # free space wavenumber in the environment
     x = k .* radius
     return m, x
 end
