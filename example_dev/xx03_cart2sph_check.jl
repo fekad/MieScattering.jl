@@ -30,7 +30,7 @@ if xyz == 1
     # xz plot range
     mat_x = x' .* ones(length(z))
     mat_z = ones(length(x))' .* z
-    mat_r,mat_theta,mat_phi = cart2sph(mat_x,0,mat_z)
+    mat_r,mat_theta,mat_phi = jlmie.cart2sph(mat_x,0,mat_z)
     p1 = heatmap(x,z,mat_r)
     p2 = heatmap(x,z,mat_theta)
     p3 = heatmap(x,z,mat_phi)
@@ -38,7 +38,7 @@ elseif xyz == 2
     # yz plot range
     mat_y = y' .* ones(length(y))
     mat_z = ones(length(y))' .* z
-    mat_r,mat_theta,mat_phi = cart2sph(0,mat_y,mat_z)
+    mat_r,mat_theta,mat_phi = jlmie.cart2sph(0,mat_y,mat_z)
     p1 = heatmap(y,z,mat_r)
     p2 = heatmap(y,z,mat_theta)
     p3 = heatmap(y,z,mat_phi)
@@ -46,7 +46,7 @@ elseif xyz == 3
     # xy plot range
     mat_x = x' .* ones(length(y))
     mat_y = ones(length(x))' .* y
-    mat_r,mat_theta,mat_phi = cart2sph(mat_x,mat_y,0)
+    mat_r,mat_theta,mat_phi = jlmie.cart2sph(mat_x,mat_y,0)
     p1 = heatmap(x,y,mat_r)
     p2 = heatmap(x,y,mat_theta)
     p3 = heatmap(x,y,mat_phi)
