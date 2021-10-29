@@ -1,16 +1,7 @@
-name = "jlmie"
-uuid = "83f16f31-eeab-45e4-be0e-7fc4231b6e5b"
-authors = ["Tatsuki Hinamoto"]
-version = "0.1.0"
+name = "MieScattering"
+uuid = "43756408-0da3-4223-9a05-aefb5e8a9118"
+authors = ["Adam Fekete <adam@fekete.co.uk>"]
+version = "2021.10.0"
 
 [deps]
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
-
-[compat]
-julia = "1"
-
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test"]

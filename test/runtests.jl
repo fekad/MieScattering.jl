@@ -1,4 +1,4 @@
-using jlmie
+using MieScattering
 using Test
 
 @testset "jlmie" begin

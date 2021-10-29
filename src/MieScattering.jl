@@ -1,9 +1,9 @@
-module jlmie
+module MieScattering
     using SpecialFunctions
 
-    include("general_functions.jl")
+    include("utils.jl")
 
-    include("mie_main.jl")
+    include("mie.jl")
     export jlmie_mx, jlmie_abcd, jlmie_pt, jlmie_S12
 
     include("efficiency.jl")

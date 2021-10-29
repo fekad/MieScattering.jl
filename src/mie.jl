@@ -31,6 +31,29 @@ function jlmie_abcd(m, x, n::Int)
     return an, bn, cn, dn
 end
 
+
+function jlmie_abcd2(m, x, n::Int)
+
+    # Bessel/Hankel functions
+    jx = sbesselj(n, x)
+    jmx = sbesselj(n, m * x)
+    hx = shankelh1(n, x)
+
+    # derivative
+    d1xjx = x * sbesselj(n - 1, x) - n * sbesselj(n, x)
+    d1mxjmx = m * x * sbesselj(n - 1, m * x) - n * sbesselj(n, m * x)
+    d1xhx = x * shankelh1(n - 1, x) - n * shankelh1(n, x)
+
+    an = (m^2 * jmx * d1xjx - jx * d1mxjmx) / (m^2 * jmx * d1xhx - hx * d1mxjmx)
+    bn = (jmx * d1xjx - jx * d1mxjmx) / (jmx * d1xhx - hx * d1mxjmx)
+
+    cn = (jx * d1xhx - hx * d1xjx) / (jmx * d1xhx - hx * d1mxjmx)
+    dn = (m * jx * d1xhx - m * hx * d1xjx) / (m^2 * jmx * d1xhx - hx * d1mxjmx)
+
+    return an, bn, cn, dn
+end
+
+
 """
     jlmie_pt(mu, n::Int)
 
@@ -102,8 +125,8 @@ end
 
 
 function largenmax(x)
-    nmax = round(maximum(x .+ x.^(1 / 3) .+ 2))
-    nmax = Int(nmax)
-    # println("nmax = "*string(nmax))
+    # nmax = round(Int, 2 + x + 4x^(1 / 3))
+    # NOTE: factor of 4 difference
+    nmax = round(Int, maximum(x .+ x.^(1 / 3) .+ 2))
     return nmax
 end
