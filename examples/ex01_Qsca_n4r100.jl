@@ -1,10 +1,12 @@
-using jlmie
 using Plots
+using Revise
+using MieScattering
 
 # structure
+s = Sphere(100e-9, 4)
+
 nmat = 4  # refractive index of a sphere
 radius = 100e-9
-
 # environment
 nenv = 1.00
 
@@ -14,11 +16,11 @@ lbd0 = range(400e-9, 1000e-9, length=601)
 # settings
 nmax = -1  # -1: namx large enough (determined from x)
 
-m, x = jlmie_mx(nmat, radius, lbd0, nenv)
-Qsca = jlmie_Qsca(m, x, nmax)
+m, x = mie_mx(nmat, radius, lbd0, nenv)
+Qsca = mie_Qsca(m, x, nmax)
 
 lbdp = lbd0 .* 1e9
-plt = plot(lbdp, Qsca,
+plot(lbdp, Qsca,
     xlabel="Wavelength (nm)",
     ylabel="Scattering efficiency",
     legend=false,
@@ -32,5 +34,4 @@ plt = plot(lbdp, Qsca,
     # linestyle=:dot,
     # size=(400, 300),
 )
-display(plt)
 

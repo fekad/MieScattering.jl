@@ -1,4 +1,4 @@
-using jlmie
+using MieScattering
 using Plots
 
 # settings
@@ -26,10 +26,11 @@ nmax = -1  # -1: namx large enough (determined from x)
 
 Isff = zeros(length(theta))
 for i = 1:length(theta)
-    Isff[i], _, _ = jlmie_Isff(nmat, radius, lbd0, nenv, theta[i], phi, nmax)
+    Isff[i], _, _ = mie_Isff(nmat, radius, lbd0, nenv, theta[i], phi, nmax)
 end
 Isff = Isff / maximum(Isff)
 
 plt = plot(theta, Isff, proj=:polar, legend=false);
+plt = plot(theta, Isff, legend=false);
 display(plt)
 

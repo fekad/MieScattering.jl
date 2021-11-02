@@ -1,6 +1,5 @@
-using jlmie
+using MieScattering
 using Plots
-plotly()
 
 # settings
 # structure
@@ -27,7 +26,7 @@ nmax = -1  # -1: namx large enough (determined from x)
 Isff = zeros(length(θ), length(ϕ))
 for i = 1:length(θ)
     for j = 1:length(ϕ)
-        Isff[i,j], _, _ = jlmie_Isff(nmat, radius, lbd0, nenv, θ[i], ϕ[j], nmax)
+        Isff[i,j], _, _ = mie_Isff(nmat, radius, lbd0, nenv, θ[i], ϕ[j], nmax)
     end
 end
 Isff = Isff / maximum(Isff)

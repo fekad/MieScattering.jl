@@ -1,4 +1,4 @@
-using jlmie
+using MieScattering
 using Plots
 
 # structure
@@ -18,8 +18,8 @@ phi = [0 0]
 # other settings
 nmax = -1  # -1: namx large enough (determined from x)
 
-Isff_F, _, _ = jlmie_Isff(nmat, radius, lbd0, nenv, theta[1], phi[1], nmax)
-Isff_B, _, _ = jlmie_Isff(nmat, radius, lbd0, nenv, theta[2], phi[2], nmax)
+Isff_F, _, _ = mie_Isff(nmat, radius, lbd0, nenv, theta[1], phi[1], nmax)
+Isff_B, _, _ = mie_Isff(nmat, radius, lbd0, nenv, theta[2], phi[2], nmax)
 
 lbdp = lbd0 .* 1e9
 plt = plot(lbdp,Isff_F,

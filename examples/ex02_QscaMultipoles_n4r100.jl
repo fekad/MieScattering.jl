@@ -1,4 +1,4 @@
-using jlmie
+using MieScattering
 using Plots
 
 # structure
@@ -14,14 +14,14 @@ lbd0 = range(400e-9, 1000e-9, length=601)
 # settings
 nmax = -1  # -1: namx large enough (determined from x)
 
-m, x = jlmie_mx(nmat, radius, lbd0, nenv)
-Qsca = jlmie_Qsca(m, x, nmax)
-Qsca_ED = jlmie_Qsca_a_n(m, x, 1)
-Qsca_MD = jlmie_Qsca_b_n(m, x, 1)
-Qsca_EQ = jlmie_Qsca_a_n(m, x, 2)
-Qsca_MQ = jlmie_Qsca_b_n(m, x, 2)
-Qsca_EH = jlmie_Qsca_a_n(m, x, 3)
-Qsca_MH = jlmie_Qsca_b_n(m, x, 3)
+m, x = mie_mx(nmat, radius, lbd0, nenv)
+Qsca = mie_Qsca(m, x, nmax)
+Qsca_ED = mie_Qsca_a_n(m, x, 1)
+Qsca_MD = mie_Qsca_b_n(m, x, 1)
+Qsca_EQ = mie_Qsca_a_n(m, x, 2)
+Qsca_MQ = mie_Qsca_b_n(m, x, 2)
+Qsca_EH = mie_Qsca_a_n(m, x, 3)
+Qsca_MH = mie_Qsca_b_n(m, x, 3)
 
 lbdp = lbd0 .* 1e9
 plt = plot(lbdp, Qsca,
