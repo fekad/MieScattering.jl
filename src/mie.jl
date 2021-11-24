@@ -1,10 +1,6 @@
 export mie_mx,mie_scattering, scattering_function
 
-# using SpecialFunctions
-# spherical bessel functions
-sbesselj(nu, x) = √(π / 2x) * besselj(nu + .5, x)
-sbessely(nu, x) = √(π / 2x) * bessely(nu + .5, x)
-shankelh1(nu,x) = sbesselj(nu, x) + 1im * sbessely(nu, x)
+
 
 findnmax(x) = round(Int, 2 + x + 4x^(1 / 3))
 
@@ -81,6 +77,12 @@ function mie_ab(m, x, nmax)
 
     return an, bn
 end
+
+# using SpecialFunctions
+# spherical bessel functions
+sbesselj(nu, x) = √(π / 2x) * besselj(nu + .5, x)
+sbessely(nu, x) = √(π / 2x) * bessely(nu + .5, x)
+shankelh1(nu,x) = sbesselj(nu, x) + 1im * sbessely(nu, x)
 
 """
     mie_abcd(m, x, n::Int)

@@ -13,6 +13,7 @@ x = range(0.0001, 13, length=N)
 Qsca = zeros(N)
 Qabs = zeros(N)
 for i = 1:N
+    local qext, qsca, qabs, qback
     qext, qsca, qabs, qback = mie_scattering(m, x[i])
     Qsca[i] = qsca
     Qabs[i] = qabs
@@ -25,14 +26,14 @@ plt = plot(x, Qsca,
     legend=false,
     label="LABEL",
     title="TITLE",
-    yscale=:log,
+    yscale=:log10,
     ylims=(0.005, maximum(Qsca))
 )
 plot!(x, Qabs)
 display(plt)
 
-print("max:" , maximum(Qsca), " ind: ",  argmax(Qsca))
-print("min:" , minimum(Qsca), " ind: ",  argmin(Qsca))
+println("max:" , maximum(Qsca), " ind: ",  argmax(Qsca))
+println("min:" , minimum(Qsca), " ind: ",  argmin(Qsca))
 
 
 ################################################################
@@ -50,6 +51,7 @@ x = range(0.0001, 13, length=N)
 Qsca = zeros(N)
 Qabs = zeros(N)
 for i = 1:N
+    local qext, qsca, qabs, qback
     qext, qsca, qabs, qback = mie_scattering(m, x[i])
     Qsca[i] = qsca
     Qabs[i] = qabs
@@ -62,14 +64,14 @@ plt = plot(x, Qsca,
     legend=false,
     label="LABEL",
     title="TITLE",
-    yscale=:log,
+    yscale=:log10,
     ylims=(0.005, maximum(Qsca))
 )
 plot!(x, Qabs)
 display(plt)
 
-print("max:" , maximum(Qsca), " ind: ",  argmax(Qsca))
-print("min:" , minimum(Qsca), " ind: ",  argmin(Qsca))
+println("max:" , maximum(Qsca), " ind: ",  argmax(Qsca))
+println("min:" , minimum(Qsca), " ind: ",  argmin(Qsca))
 
 
 
@@ -90,7 +92,7 @@ plot(
     label="Unpolarized",
     ylabel="Intensity (\$|S|^2}\$)",
     xlabel="phase angle ϴ",
-    yaxis=:log
+    yaxis=:log10
 )
 
 qext, qsca, qabs, qback = mie_scattering(m, x)
@@ -100,8 +102,8 @@ plot!(angles, qsca/4π * ones(length(angles)))
 # plot!(theta*180/π, SL, label="left-polarized (perpendicular)")
 # plot!(theta*180/π, SR, label="right-polarized (parallel)")
 
-print("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
-print("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
+println("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
+println("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
 
 
 
@@ -120,7 +122,7 @@ plot(
     label="Unpolarized",
     ylabel="Intensity (\$|S|^2}\$)",
     xlabel="phase angle ϴ",
-    yaxis=:log
+    yaxis=:log10
 )
 
 qext, qsca, qabs, qback = mie_scattering(m, x)
@@ -130,8 +132,8 @@ plot!(angles, qsca/4π * ones(length(angles)))
 # plot!(theta*180/π, SL, label="left-polarized (perpendicular)")
 # plot!(theta*180/π, SR, label="right-polarized (parallel)")
 
-print("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
-print("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
+println("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
+println("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
 
 
 m = 2+1im
@@ -148,7 +150,7 @@ plot(
     label="Unpolarized",
     ylabel="Intensity (\$|S|^2}\$)",
     xlabel="phase angle ϴ",
-    yaxis=:log
+    yaxis=:log10
 )
 
 qext, qsca, qabs, qback = mie_scattering(m, x)
@@ -158,6 +160,6 @@ plot!(angles, qsca/4π * ones(length(angles)))
 # plot!(theta*180/π, SL, label="left-polarized (perpendicular)")
 # plot!(theta*180/π, SR, label="right-polarized (parallel)")
 
-print("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
-print("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
+println("max:" , maximum(SU), " ind: ", angles[argmax(SU)])
+println("min:" , minimum(SU), " ind: ", angles[argmin(SU)])
 

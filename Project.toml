@@ -1,7 +1,7 @@
 name = "MieScattering"
 uuid = "43756408-0da3-4223-9a05-aefb5e8a9118"
 authors = ["Adam Fekete <adam@fekete.co.uk>"]
-version = "2021.10.0"
+version = "0.1.1"
 
 [deps]
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
