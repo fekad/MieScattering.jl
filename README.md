@@ -1,5 +1,10 @@
 # MieScattering.jl
 
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://fekad.github.io/MieScattering.jl/)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://fekad.github.io/MieScattering.jl/dev)
+[![Run tests](https://github.com/fekad/MieScattering.jl/actions/workflows/test.yml/badge.svg)](https://github.com/fekad/MieScattering.jl/actions/workflows/test.yml)
+
+
 Julia implementation of Mie theory for nanophotonics.[[1]](#reference)
 
 Based the following package created by Tatsuki Hinamoto@Kobe University, Japan: https://github.com/Hinamoooon/jlmie
