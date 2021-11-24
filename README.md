@@ -1,9 +1,10 @@
 # MieScattering.jl
 
 Julia implementation of Mie theory for nanophotonics.[[1]](#reference)
+
 Based the following package created by Tatsuki Hinamoto@Kobe University, Japan: https://github.com/Hinamoooon/jlmie
 
-# Installation
+## Installation
 
 Use Julia Package Manager (]) and run
 ```
@@ -18,7 +19,7 @@ This work was carried out at UNamur in Luc Henrard's group . The authors acknowl
 SURFASCOPE - Surface Enhanced Spectroscopy by Second-Principles Calculations.
 
 
-# Reference
+## Reference
 
 1. Absorption and Scattering of Light by Small Particles; Bohren, C. F., Huffman, D. R., Eds.; Wiley-VCH Verlag GmbH: Weinheim, Germany, 1998.
 
