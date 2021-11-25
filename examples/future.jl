@@ -1,43 +1,46 @@
+# Note: this file contains ideas/palns for future interface
+
+# cases:
+# sphere : Sphere or Vector(Sphere)
+# wavelenght: single or vector
+
+# =====================================================================================================
+
 # Structure
+s = Sphere(radius, epsilon)
+
 # epsilon_media: real, positive
-s = Sphere(radius, epsilon, [epsilon_media])
-
-sol = solve(s, x, MieAuto())
-# sol = solve(s, wavelenght, MieAuto()) ??
-
-qsca = scattering(sol)
-qext = scattering(sol)
-
-sol = solve(s, x, [model])
+sol = solve(s, x, epsilon_media, MieAuto())
+# sol = solve(s, wavelenght, epsilon_media, MieAuto()) ??
 sol = solve(s, x, Rayleigh())
 sol = solve(s, x, MieLarge())
 sol = solve(s, x, MieConductive())
 
+qsca = scattering(sol)
+qext = extinction(sol)
+
+
 # =====================================================================================================
 # Structure
+s = Sphere(radius, epsilon)
+
 # epsilon_media: real, positive
-s = Sphere(radius, epsilon, [epsilon_media])
-
-
-model = MieAuto(s, wavelenght) # ??
+model = MieAuto(s, wavelenght, epsilon_media) # ??
 
 # model = Rayleigh(s, x)
 # model = MieLarge(s, x)
 # model = MieConductive(s, x)
 
 qsca = scattering(model)
-qext = scattering(model)
+qext = extinction(model)
 
 
 # =====================================================================================================
 # Structure
-# epsilon_media: real, positive
-s = Sphere(radius, epsilon, [epsilon_media])
+s = Sphere(radius, epsilon)
 
-m, x = mx(s, wavelenght)
-# cases:
-# s : Sphere or Vector(Sphere)
-# wavelenght
+# epsilon_media: real, positive
+m, x = mx(s, wavelenght, epsilon_media)
 
 model = Mie(m, x)
 
