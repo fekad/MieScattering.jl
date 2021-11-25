@@ -18,7 +18,7 @@ Conversion of parameters for calculation of light scattering by a small sphere b
 - `m`: relative refractive index (``n_\mathrm{material} / n_\mathrm{environment}``)
 - `x`: size parameter (wavenumber * radius)
 """
-function mie_mx(m, radius, wavelength, n_medium=1.00)
+function mie_mx(m, radius, wavelength, n_medium = 1.00)
     m /= n_medium
     wavelength /= n_medium  # effective wavelength in the environment
 
@@ -51,21 +51,21 @@ function mie_ab(m, x, nmax)
     sx = sqrt(0.5 * π * x)
 
     px = sx * besselj.(nu, x)
-    p1x = append!([sin(x)], px[1:end - 1])
+    p1x = append!([sin(x)], px[1:end-1])
 
     chx = -sx * bessely.(nu, x)
-    ch1x = append!([cos(x)], chx[1:end - 1])
+    ch1x = append!([cos(x)], chx[1:end-1])
 
     gsx = px - 1im * chx
     gs1x = p1x - 1im * ch1x
 
     # B&H Equation 4.89
     Dn = zeros(ComplexF64, nmx)
-    for i in nmx - 1:-1:1
-        Dn[i] = (i / mx) - (1 / (Dn[i + 1] + i / mx))
+    for i = nmx-1:-1:1
+        Dn[i] = (i / mx) - (1 / (Dn[i+1] + i / mx))
     end
 
-    D = Dn[2:nmax + 1] # Dn(mx), drop terms beyond nMax
+    D = Dn[2:nmax+1] # Dn(mx), drop terms beyond nMax
 
     da = D / m + n / x
     db = m * D + n / x
@@ -77,9 +77,9 @@ function mie_ab(m, x, nmax)
 end
 
 # spherical bessel functions
-sbesselj(nu, x) = √(π / 2x) * besselj(nu + .5, x)
-sbessely(nu, x) = √(π / 2x) * bessely(nu + .5, x)
-shankelh1(nu,x) = sbesselj(nu, x) + 1im * sbessely(nu, x)
+sbesselj(nu, x) = √(π / 2x) * besselj(nu + 0.5, x)
+sbessely(nu, x) = √(π / 2x) * bessely(nu + 0.5, x)
+shankelh1(nu, x) = sbesselj(nu, x) + 1im * sbessely(nu, x)
 
 @doc raw"""
     mie_abcd(m, x, n::Int)
@@ -113,30 +113,6 @@ function mie_ab_n(m, x, n::Int)
     return an, bn
 end
 
-#
-# m = 1.33 + 0.01im
-# x = 3
-#
-# an, bn = mie_ab(m, x, 3)
-# an[1] ≈ mie_ab_n(m, x, 1)[1]
-# an[2] ≈ mie_ab_n(m, x, 2)[1]
-# an[3] ≈ mie_ab_n(m, x, 3)[1]
-# bn[1] ≈ mie_ab_n(m, x, 1)[2]
-# bn[2] ≈ mie_ab_n(m, x, 2)[2]
-# bn[3] ≈ mie_ab_n(m, x, 3)[2]
-#
-#
-# m = 2 + 1im
-# x = 5
-#
-# an, bn = mie_ab(m, x, 3)
-# an[1] ≈ mie_ab_n(m, x, 1)[1]
-# an[2] ≈ mie_ab_n(m, x, 2)[1]
-# an[3] ≈ mie_ab_n(m, x, 3)[1]
-# bn[1] ≈ mie_ab_n(m, x, 1)[2]
-# bn[2] ≈ mie_ab_n(m, x, 2)[2]
-# bn[3] ≈ mie_ab_n(m, x, 3)[2]
-
 
 @doc raw"""
     mie_pi_tau(mu, nmax)
@@ -169,9 +145,9 @@ function mie_pi_tau(mu, nmax)
     t[1] = mu
     t[2] = 3 * cos(2 * acos(mu))
 
-    for n in 3:nmax
-        p[n] = (2n - 1) / (n - 1) * mu * p[n - 1] - n / (n - 1) * p[n - 2]
-        t[n] = n * mu * p[n] - (n + 1) * p[n - 1]
+    for n = 3:nmax
+        p[n] = (2n - 1) / (n - 1) * mu * p[n-1] - n / (n - 1) * p[n-2]
+        t[n] = n * mu * p[n] - (n + 1) * p[n-1]
     end
 
     return p, t
@@ -183,18 +159,18 @@ end
 See Sec. 4.3.1 of B&H ref of pi,tau: [D. Deirmendjian, “Electromagnetic Scattering on Spherical Polydispersions"]
 """
 function mie_pi_tau_n(mu, n::Int)
-# See Sec. 4.3.1 of B&H
-# ref of pi,tau: [D. Deirmendjian, “Electromagnetic Scattering on Spherical Polydispersions"]
+    # See Sec. 4.3.1 of B&H
+    # ref of pi,tau: [D. Deirmendjian, “Electromagnetic Scattering on Spherical Polydispersions"]
 
     if mu < -1 || mu > 1
         error("mu is cos(theta), -1 <= mu <= 1")
     end
 
     if n == 0
-        pin = 0.  # pi(0, mu) = 0
-        taun = 0.  # not used but tau(0, mu) = 0
+        pin = 0.0  # pi(0, mu) = 0
+        taun = 0.0  # not used but tau(0, mu) = 0
     elseif n == 1
-        pin = 1.  # pi(1, mu) = 1
+        pin = 1.0  # pi(1, mu) = 1
         taun = mu  # note that pi(0, mu) = 0
     elseif n > 1
         # recurrence, eq.(4.47) of B&H
@@ -206,35 +182,6 @@ function mie_pi_tau_n(mu, n::Int)
     return pin, taun
 end
 
-# # error
-# # pin, taun = mie_pi_tau(mu, 1)
-#
-# mu = cos(0)
-# pn, tn = mie_pi_tau(mu, 3)
-# pn[1] ≈ mie_pi_tau_n(mu, 1)[1]
-# pn[2] ≈ mie_pi_tau_n(mu, 2)[1]
-# pn[3] ≈ mie_pi_tau_n(mu, 3)[1]
-# tn[1] ≈ mie_pi_tau_n(mu, 1)[2]
-# tn[2] ≈ mie_pi_tau_n(mu, 2)[2]
-# tn[3] ≈ mie_pi_tau_n(mu, 3)[2]
-#
-# mu = cos(π / 3)
-# pn, tn = mie_pi_tau(mu, 3)
-# pn[1] ≈ mie_pi_tau_n(mu, 1)[1]
-# pn[2] ≈ mie_pi_tau_n(mu, 2)[1]
-# pn[3] ≈ mie_pi_tau_n(mu, 3)[1]
-# tn[1] ≈ mie_pi_tau_n(mu, 1)[2]
-# tn[2] ≈ mie_pi_tau_n(mu, 2)[2]
-# tn[3] ≈ mie_pi_tau_n(mu, 3)[2]
-#
-# mu = cos(π / 2)
-# pn, tn = mie_pi_tau(mu, 3)
-# pn[1] ≈ mie_pi_tau_n(mu, 1)[1]
-# pn[2] ≈ mie_pi_tau_n(mu, 2)[1]
-# pn[3] ≈ mie_pi_tau_n(mu, 3)[1]
-# tn[1] ≈ mie_pi_tau_n(mu, 1)[2]
-# tn[2] ≈ mie_pi_tau_n(mu, 2)[2]
-# tn[3] ≈ mie_pi_tau_n(mu, 3)[2]
 
 @doc raw"""
     mie_scattering(m, x, [nmax])
@@ -281,10 +228,10 @@ julia> mie_scattering(1.77+0.63im, 375, 300)
 (2.858497199156411, 1.3149276685170943, 1.543569530639317, 0.2014551048135256)
 ```
 """
-function mie_scattering(m, x, nmax=findnmax(x))
+function mie_scattering(m, x, nmax = findnmax(x))
 
     if x ≈ 0
-        return 0., 0., 0., 0.
+        return 0.0, 0.0, 0.0, 0.0
     end
 
     an, bn = mie_ab(m, x, nmax)
@@ -322,13 +269,13 @@ Calculate scattering efficiency of a sphere
 # Return values
 - `Qsca`: Scattering efficiency (total up to n-th order resonances)
 """
-function mie_scattering_n(m, x, nmax=findnmax(x))
+function mie_scattering_n(m, x, nmax = findnmax(x))
 
     if x ≈ 0
-        return 0.
+        return 0.0
     end
 
-    qsca, qext = 0., 0.
+    qsca, qext = 0.0, 0.0
     for n = 1:nmax
         an, bn = mie_ab_n(m, x, n)
         qsca += (2n + 1) * (abs(an)^2 + abs(bn)^2)
@@ -341,20 +288,6 @@ function mie_scattering_n(m, x, nmax=findnmax(x))
 
     return qext, qsca, qabs, nothing
 end
-
-# m = 1.33 + 0.01im
-# x = 3
-#
-# qext1, qsca1, _, _ = mie_scattering(m, x)
-# qext2, qsca2, _, _ = mie_scattering_n(m, x)
-#
-# m = 2 + 1im
-# x = 5
-#
-#
-# qext1, qsca1, _, _ = mie_scattering(m, x)
-# qext2, qsca2, _, _ = mie_scattering_n(m, x)
-
 
 @doc raw"""
     mie_S1_S2(m,x,mu)
@@ -379,7 +312,7 @@ S_2 = \sum\limits_{n=1}^{n_{max}} \frac{2n+1}{n(n+1)} (a_n \tau_n + b_n \pi_n)
 - S1, S2: The ``S_1`` and ``S_2`` values.
 
 """
-function mie_S1_S2(m, x, mu, nmax=findnmax(x))
+function mie_S1_S2(m, x, mu, nmax = findnmax(x))
 
     an, bn = mie_ab(m, x, nmax)
     pin, taun = mie_pi_tau(mu, nmax)
@@ -411,39 +344,6 @@ function mie_S1_S2_n(m, x, mu, n)
 
     return S1, S2
 end
-
-#
-# m = 1.33 + 0.01im
-# x = 3
-#
-# mu = cos(0)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
-#
-#
-# mu = cos(π / 3)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
-#
-# mu = cos(π / 2)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
-#
-#
-# m = 2 + 1im
-# x = 5
-#
-# mu = cos(0)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
-#
-# mu = cos(π / 3)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
-#
-# mu = cos(π / 2)
-# s1s2 = mie_S1_S2(m, x, mu, 2)
-# s1s2 .≈ mie_S1_S2_n(m, x, mu, 1) .+ mie_S1_S2_n(m, x, mu, 2)
 
 
 @doc raw"""
@@ -487,7 +387,7 @@ function scattering_function(theta, m, x)
         return SL, SR, SU
     end
 
-    for i in 1:n
+    for i = 1:n
         mu = cos(theta[i])
         s1, s2 = mie_S1_S2(m, x, mu)
         SL[i] = abs(s1^2)
@@ -516,10 +416,10 @@ function scattering_function_n(theta, m, x)
         return SL, SR, SU
     end
 
-    for i in 1:n
+    for i = 1:n
         mu = cos(theta[i])
         nmax = findnmax(x)
-        s1, s2 = 0., 0.
+        s1, s2 = 0.0, 0.0
         for n = 1:nmax
             s1n, s2n = mie_S1_S2_n(m, x, mu, n)
             s1 += s1n
@@ -534,35 +434,4 @@ function scattering_function_n(theta, m, x)
     return SL, SR, SU
 end
 
-# m = 1.33 + 0.01im
-# x = 3
-#
-# theta = 0
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
-#
-#
-# theta = π/3
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
-#
-# theta = π/2
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
-#
-#
-# m = 2 + 1im
-# x = 5
-#
-# theta = 0
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
-#
-# theta = π/3
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
-#
-# theta = π/2
-# scattering_function(theta, m, x)
-# scattering_function_n(theta, m, x)
 
