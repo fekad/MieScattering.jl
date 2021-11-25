@@ -1,23 +1,21 @@
-export mie_mx,mie_scattering, scattering_function
-
 
 
 findnmax(x) = round(Int, 2 + x + 4x^(1 / 3))
 
-"""
+@doc raw"""
     mie_mx(m, radius, wavelength, n_medium=1.00)
 
-    Conversion of parameters for calculation of light scattering by a small sphere based on Mie theory
+Conversion of parameters for calculation of light scattering by a small sphere based on Mie theory
 
 # Arguments
-- `m`: n_material; refractive index of the material of the sphere
+- `m`: ``n_{\mathrm{material}}``; refractive index of the material of the sphere
 - `radius`: radius of the sphere
 - `wavelength`: target vacuum wavelength (range)
 - `n_medium`: n_environement; refractive index of the environment
       around the sphere (default: air)
 
 # Return values
-- `m`: relative refractive index (n_material / n_environment)
+- `m`: relative refractive index (``n_\mathrm{material} / n_\mathrm{environment}``)
 - `x`: size parameter (wavenumber * radius)
 """
 function mie_mx(m, radius, wavelength, n_medium=1.00)
@@ -78,19 +76,18 @@ function mie_ab(m, x, nmax)
     return an, bn
 end
 
-# using SpecialFunctions
 # spherical bessel functions
 sbesselj(nu, x) = √(π / 2x) * besselj(nu + .5, x)
 sbessely(nu, x) = √(π / 2x) * bessely(nu + .5, x)
 shankelh1(nu,x) = sbesselj(nu, x) + 1im * sbessely(nu, x)
 
-"""
+@doc raw"""
     mie_abcd(m, x, n::Int)
 
 Calculate n-th order Mie coefficients a,b,c,d
 
 # Arguments
-- `m`: relative refractive index (n_material / n_environment)
+- `m`: relative refractive index (``n_\mathrm{material} / n_\mathrm{environment}``)
 - `x`: size parameter (wavenumber * radius)
 - `n::Int`
 """
@@ -151,7 +148,7 @@ This function uses recurrence relations to calculate ``\pi_n`` and ``\tau_n``, b
 \pi_n = \frac{2n-1}{n-1} \mu \pi_{n-1} - \frac{n}{n-1} \pi_{n-2}
 ```
 ```math
-\tau_n = n \mu\ pi_n - (n+1) \ pi_{n-1}
+\tau_n = n \mu \pi_n - (n+1) \pi_{n-1}
 ```
 
 # Arguments
@@ -180,11 +177,10 @@ function mie_pi_tau(mu, nmax)
     return p, t
 end
 
-"""
+@doc raw"""
     mie_pi_tau(mu, n::Int)
 
-See Sec. 4.3.1 of B&H
-ref of pi,tau: [D. Deirmendjian, “Electromagnetic Scattering on Spherical Polydispersions"]
+See Sec. 4.3.1 of B&H ref of pi,tau: [D. Deirmendjian, “Electromagnetic Scattering on Spherical Polydispersions"]
 """
 function mie_pi_tau_n(mu, n::Int)
 # See Sec. 4.3.1 of B&H
@@ -245,25 +241,25 @@ end
 
 Computes Mie efficencies *Q* and asymmetry parameter *g* of a single, homogeneous particle. Uses `mie_ab` to calculate ``a_n`` and ``b_n``, and then calculates *Q* via:
 ```math
-Q_{ext}=\frac{2}{x^2}\sum_{n=1}^{n_{max}}(2n+1)\:\text{Re}\left\{a_n+b_n\right\}}
+Q_{ext} = \frac{2}{x^2} \sum \limits_{n=1}^{n_{max}} (2n+1) \: \text{Re} \left\{ a_n + b_n \right\}
 ```
 ```math
-Q_{sca}=\frac{2}{x^2}\sum_{n=1}^{n_{max}}(2n+1)(|a_n|^2+|b_n|^2)}
+Q_{sca} = \frac{2}{x^2} \sum_{n=1}^{n_{max}} (2n+1) (|a_n|^2 + |b_n|^2)
 ```
 ```math
-Q_{abs}=Q_{ext}-Q_{sca}}
+Q_{abs} = Q_{ext} - Q_{sca}
 ```
 ```math
-Q_{back}=\frac{1}{x^2} \left| \sum_{n=1}^{n_{max}}(2n+1)(-1)^n(a_n-b_n) \right| ^2}
+Q_{back} = \frac{1}{x^2} \left| \sum\limits_{n=1}^{n_{max}} (2n+1) (-1)^n (a_n - b_n) \right|^2
 ```
 ```math
-Q_{ratio}=\frac{Q_{back}}{Q_{sca}}}
+Q_{ratio} = \frac{Q_{back}}{Q_{sca}}
 ```
 ```math
-g=\frac{4}{Q_{sca}x^2}\left[\sum\limits_{n=1}^{n_{max}}\frac{n(n+2)}{n+1}\text{Re}\left\{a_n a_{n+1}^*+b_n b_{n+1}^*\right\}+\sum\limits_{n=1}^{n_{max}}\frac{2n+1}{n(n+1)}\text{Re}\left\{a_n b_n^*\right\}\right]}
+g = \frac{4}{Q_{sca}x^2} \left[ \sum\limits_{n=1}^{n_{max}} \frac{n(n+2)}{n+1} \text{Re}\left\{a_n a_{n+1}^* + b_n b_{n+1}^*\right\} + \sum\limits_{n=1}^{n_{max}} \frac{2n+1}{n(n+1)} \text{Re}\left\{a_n b_n^*\right\}\right]
 ```
 ```math
-Q_{pr}=Q_{ext}-gQ_{sca}}
+Q_{pr} = Q_{ext} - g Q_{sca}
 ```
 where asterisks denote the complex conjugates.
 
@@ -278,7 +274,7 @@ where asterisks denote the complex conjugates.
 
 # Examples
 
-For example, compute the Mie efficencies of a particle ``300 nm`` in diameter with ``m = 1.77+0.63i``, illuminated by ``\lambda = 375 nm``:
+For example, compute the Mie efficencies of a particle ``300 \, [\mathrm{nm}]`` in diameter with ``m = 1.77+0.63i``, illuminated by ``\lambda = 375 \, [\mathrm{nm}]``:
 ```julia-repl
 julia> mie_scattering(1.77+0.63im, 375, 300)
 
@@ -311,13 +307,13 @@ function mie_scattering(m, x, nmax=findnmax(x))
     return qext, qsca, qabs, qback
 end
 
-"""
+@doc raw"""
     mie_scattering_n(m, x, nmax::Int=-1)
 
 Calculate scattering efficiency of a sphere
 
 # Arguments
-- `m`: relative refractive index (n_material / n_environment)
+- `m`: relative refractive index (``n_\mathrm{material} / n_\mathrm{environment}``)
 - `x`: size parameter (wavenumber * radius)
 - `namx`: maximun order of resonances being considered
       (nmax = 1: dipole, 2: dipole+quadrupole, ...,
@@ -380,7 +376,7 @@ S_2 = \sum\limits_{n=1}^{n_{max}} \frac{2n+1}{n(n+1)} (a_n \tau_n + b_n \pi_n)
 - mu: The cosine of the scattering angle.
 
 # Return values
--S1, S2: The ``S_1`` and ``S_2`` values.
+- S1, S2: The ``S_1`` and ``S_2`` values.
 
 """
 function mie_S1_S2(m, x, mu, nmax=findnmax(x))
@@ -388,14 +384,19 @@ function mie_S1_S2(m, x, mu, nmax=findnmax(x))
     an, bn = mie_ab(m, x, nmax)
     pin, taun = mie_pi_tau(mu, nmax)
 
-    S1 = sum((2n + 1) / (n * (n + 1)) * (an[n] * pin[n] + bn[n] * taun[n]) for n = 1:nmax)
-    S2 = sum((2n + 1) / (n * (n + 1)) * (an[n] * taun[n] + bn[n] * pin[n]) for n = 1:nmax)
+    S1 = sum(1:nmax) do n
+        (2n + 1) / (n * (n + 1)) * (an[n] * pin[n] + bn[n] * taun[n])
+    end
+
+    S2 = sum(1:nmax) do n
+        (2n + 1) / (n * (n + 1)) * (an[n] * taun[n] + bn[n] * pin[n])
+    end
 
     return S1, S2
 end
 
 
-"""
+@doc raw"""
     mie_S1_S2(m, x, mu, n::Int)
 
 calculate n-th order S1,S2 component of scattering matrix.
@@ -446,33 +447,33 @@ end
 
 
 @doc raw"""
-    scattering_function(m, wavelength, diameter, n_medium=1.0, minAngle=0, maxAngle=180, angularResolution=0.5)
+    scattering_function(theta, m, x)
 
-Creates arrays for plotting the angular scattering intensity functions in theta-space with parallel, perpendicular, and unpolarized light. Also includes an array of the angles for each step. This angle can be in either degrees, radians, or gradians for some reason. The angles can either be geometrical angle or the qR vector (see `Sorensen, M. Q-space analysis of scattering by particles: a review. J. Quant. Spectrosc. Radiat. Transfer 2013, 131, 3-12 <http://www.sciencedirect.com/science/article/pii/S0022407313000083>`_). Uses `mie_S1_S2` to compute ``S_1`` and ``S_2``, then computes parallel, perpendicular, and unpolarized intensities by
+Creates arrays for plotting the angular scattering intensity functions in theta-space with parallel, perpendicular, and unpolarized light. Also includes an array of the angles for each step. This angle can be in either degrees, radians, or gradians for some reason. The angles can either be geometrical angle or the qR vector (see *Sorensen, M. Q-space analysis of scattering by particles: a review. J. Quant. Spectrosc. Radiat. Transfer 2013, 131, 3-12 <http://www.sciencedirect.com/science/article/pii/S0022407313000083>*). Uses `mie_S1_S2` to compute ``S_1`` and ``S_2``, then computes parallel, perpendicular, and unpolarized intensities by
 
 ```math
-SL(\theta)=|S_1|^2}
+SL(\theta) = |S_1|^2
 ```
 ```math
-SR(\theta)=|S_2|^2}
+SR(\theta) = |S_2|^2
 ```
 ```math
-SU(\theta)=\frac{1}{2}(SR + SL)}
+SU(\theta) = \frac{1}{2}(SR + SL)
 ```
 
 # Arguments
 
 - theta: An array of the angles used in calculations.
-- m: The complex refractive index with the convention *m = n+ik*.
+- m: The complex refractive index with the convention ``m = n+ik``.
 - wavelength: The wavelength of incident light, in nanometers.
 - diameter: The diameter of the particle, in nanometers.
 - n_medium: The refractive index of the surrounding medium. This must be positive, nonzero, and real. Any imaginary part will be discarded.
 
 # Return values
 
-- SL: An array of the scattered intensity of left-polarized (perpendicular) light. Same size as the **theta** array.
-- SR: An array of the scattered intensity of right-polarized (parallel) light. Same size as the **theta** array.
-- SU: An array of the scattered intensity of unpolarized light, which is the average of SL and SR. Same size as the **theta** array.
+- SL: An array of the scattered intensity of left-polarized (perpendicular) light. Same size as the `theta` array.
+- SR: An array of the scattered intensity of right-polarized (parallel) light. Same size as the `theta` array.
+- SU: An array of the scattered intensity of unpolarized light, which is the average of SL and SR. Same size as the `theta` array.
 """
 function scattering_function(theta, m, x)
 
@@ -497,6 +498,12 @@ function scattering_function(theta, m, x)
     return SL, SR, SU
 end
 
+
+
+@doc raw"""
+    scattering_function_n(theta, m, x)
+
+"""
 function scattering_function_n(theta, m, x)
 
     n = length(theta)

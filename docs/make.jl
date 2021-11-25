@@ -12,6 +12,8 @@ makedocs(
     modules = [MieScattering],
     pages=[
         "Home" => "index.md",
+        "Mie" => "mie.md",
+        "Rayleigh" => "rayleigh.md"
     ]
 )
 
