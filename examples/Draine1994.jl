@@ -1,14 +1,14 @@
 using Plots
 using MieScattering
-
+plotlyjs()
 ################################################################
 # Fig 1.
 
 # structure
 m = 1.33 + .01im   # imag. component to demonstrate absorption
 
-N = 1001
-x = range(0.0001, 13, length=N)
+N = 1000
+x = range(0., 13, length=N+1)[2:end]
 
 Qsca = zeros(N)
 Qabs = zeros(N)
@@ -40,13 +40,10 @@ println("min:" , minimum(Qsca), " ind: ",  argmin(Qsca))
 # Fig. 2
 
 # structure
-m1 = 2 + 1im   # imag. component to demonstrate absorption
+m = 2 + 1im   # imag. component to demonstrate absorption
 
-N=1001
-x = range(0, 13, length=N)
-
-N = 1001
-x = range(0.0001, 13, length=N)
+N=1000
+x = range(0, 13, length=N+1)[2:end]
 
 Qsca = zeros(N)
 Qabs = zeros(N)
@@ -65,7 +62,7 @@ plt = plot(x, Qsca,
     label="LABEL",
     title="TITLE",
     yscale=:log10,
-    ylims=(0.005, maximum(Qsca))
+    ylims=(0.005, maximum(Qabs))
 )
 plot!(x, Qabs)
 display(plt)

@@ -1,7 +1,16 @@
+struct Rayleigh end
 
+scattering(m, x, ::Rayleigh) = 8 * x^4 / 3 * abs((m^2 - 1) / (m^2 + 2))^2
+absorption(m, x, ::Rayleigh) = 4 * x * imag((m^2 - 1) / (m^2 + 2))
+extinction(m, x, s::Rayleigh) = scattering(m, x, s) + absorption(m, x, s)
+backscattering(m, x, s::Rayleigh) = 3 * scattering(m, x, s) / 2
+
+
+# s = Scatterer(1.33 + 0.01im, 25., 870.)
+# scattering(s, Rayleigh())
 
 @doc raw"""
-    rayleigh_scattering(m, wavelength, diameter, n_medium=1.0)
+    rayleigh_scattering(m, x)
 
 Computes Mie efficencies of a spherical particle in the Rayleigh regime (``x = \pi \, d_p / \lambda \ll 1``) given refractive index `m`, `wavelength`, and `diameter`. Uses Rayleigh-regime approximations:
 ```math
@@ -34,21 +43,17 @@ Q_{pr} = Q_{ext}
 
 # Examples
 ```julia-repl
-julia> rayleigh_scattering(1.33+0.01im, 870., 50.)
+julia> rayleigh_scattering(mx(1.33 + 0.01im, 25., 870.)...)
 
 (0.0041753430994240295, 0.00011805645915412197, 0.004057286640269908, 0.00017708468873118297)
 ```
 # Notes
 -  different formula on [wiki](https://en.m.wikipedia.org/wiki/Rayleigh_scattering)
 """
-function rayleigh_scattering(m::ComplexF64, wavelength::Float64, diameter::Float64, n_medium::Float64=1.0)
-    m /= n_medium
-    wavelength /= n_medium
-
-    x = pi * diameter / wavelength
+function rayleigh_scattering(m::ComplexF64, x::Float64)
 
     if x ≈ 0
-        return  0, 0, 0, 0
+        return 0, 0, 0, 0
     end
 
     LL = (m^2 - 1) / (m^2 + 2) # Lorentz-Lorenz term
@@ -65,10 +70,12 @@ function rayleigh_scattering(m::ComplexF64, wavelength::Float64, diameter::Float
 end
 
 
-# rayleigh_scattering(1.33 + 0.01im, 870., 0.)
-# rayleigh_scattering(1.33 + 0.01im, 870., 50.)
-#
+# rayleigh_scattering(mx(1.33 + 0.01im, 0., 870.)...)
+# rayleigh_scattering(mx(1.33 + 0.01im, 25., 870.)...)
+# #
 # lambda = LinRange(600, 1000, 1001)
-# qext =  [rayleigh_scattering(1.33 + 0.01im, l, 50.)[1] for l in lambda]
+# qext =  [rayleigh_scattering(mx(1.33 + 0.01im, 25., l)...)[1] for l in lambda]
 # plot(lambda, qext)
+#
+
 

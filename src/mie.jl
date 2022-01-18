@@ -1,31 +1,57 @@
-
-
 findnmax(x) = round(Int, 2 + x + 4x^(1 / 3))
 
-@doc raw"""
-    mie_mx(m, radius, wavelength, n_medium=1.00)
+struct Mie end
 
-Conversion of parameters for calculation of light scattering by a small sphere based on Mie theory
 
-# Arguments
-- `m`: ``n_{\mathrm{material}}``; refractive index of the material of the sphere
-- `radius`: radius of the sphere
-- `wavelength`: target vacuum wavelength (range)
-- `n_medium`: n_environement; refractive index of the environment
-      around the sphere (default: air)
+function scattering(m, x, ::Mie)
 
-# Return values
-- `m`: relative refractive index (``n_\mathrm{material} / n_\mathrm{environment}``)
-- `x`: size parameter (wavenumber * radius)
-"""
-function mie_mx(m, radius, wavelength, n_medium = 1.00)
-    m /= n_medium
-    wavelength /= n_medium  # effective wavelength in the environment
+    nmax = findnmax(x)
+    an, bn = mie_ab(m, x, nmax)
 
-    k = 2π / wavelength  # free space wavenumber in the environment
-    x = k .* radius
-    return m, x
+    return 2 / x^2 * sum((2n + 1) * (abs(an[n])^2 + abs(bn[n])^2) for n = 1:nmax)
 end
+
+absorption(m, x, s::Mie) = extinction(m, x, s) - scattering(m, x, s)
+
+function extinction(m, x, ::Mie)
+
+    nmax = findnmax(x)
+    an, bn = mie_ab(m, x, nmax)
+
+    return 2 / x^2 * sum((2n + 1) * real(an[n] + bn[n]) for n = 1:nmax)
+end
+
+function backscattering(m, x, ::Mie)
+
+    nmax = findnmax(x)
+    an, bn = mie_ab(m, x, nmax)
+
+    return 1 / x^2 * abs(sum((2n + 1) * (-1)^n * (an[n] - bn[n]) for n = 1:nmax))^2
+end
+
+
+
+struct MieProblem
+    m
+    x
+    nmax
+    an
+    bn
+
+    function MieProblem(m, x)
+        nmax = findnmax(x)
+        an, bn = mie_ab(m, x, nmax)
+        return new(m, x, nmax, an, bn)
+    end
+end
+
+
+scattering(s::MieProblem) = 2 / s.x^2 * sum((2n + 1) * (abs(s.an[n])^2 + abs(s.bn[n])^2) for n = 1:s.nmax)
+absorption(s::MieProblem) = extinction(s) - scattering(s)
+extinction(s::MieProblem) = 2 / s.x^2 * sum((2n + 1) * real(s.an[n] + s.bn[n]) for n = 1:s.nmax)
+backscattering(s::MieProblem) = 1 / s.x^2 * abs(sum((2n + 1) * (-1)^n * (s.an[n] - s.bn[n]) for n = 1:s.nmax))^2
+
+
 
 @doc raw"""
     mie_ab(m, x, nmax)
